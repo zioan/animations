@@ -5,7 +5,19 @@
     <h1 v-if="flag" key="main">Hello World</h1>
     <h1 v-else key="secondary">Another Hello</h1>
   </transition> -->
-  <transition name="zoom" appear>
+  <!-- <transition name="zoom" appear>
+    <h2 v-if="flag">Hello</h2>
+  </transition> -->
+
+  <transition
+    @before-enter="beforeEnter"
+    @enter="enter"
+    @after-enter="afterEnter"
+    @before-leave="beforeLeave"
+    @leave="leave"
+    @after-leave="afterLeave"
+    :css="false"
+  >
     <h2 v-if="flag">Hello</h2>
   </transition>
 </template>
@@ -15,8 +27,40 @@ export default {
   name: "App",
   data() {
     return {
-      flag: true,
+      flag: false,
     };
+  },
+  methods: {
+    beforeEnter(el) {
+      console.log("beforeEnter event", el);
+    },
+    enter(el, done) {
+      const animation = el.animate([{ transform: "scale3d(0,0,0)" }, {}], {
+        duration: 1000,
+      });
+
+      animation.onfinish = () => {
+        done();
+      };
+    },
+    afterEnter(el) {
+      console.log("afterEnter event", el);
+    },
+    beforeLeave(el) {
+      console.log("beforeLeave event", el);
+    },
+    leave(el, done) {
+      const animation = el.animate([{}, { transform: "scale3d(0,0,0)" }], {
+        duration: 1000,
+      });
+
+      animation.onfinish = () => {
+        done();
+      };
+    },
+    afterLeave(el) {
+      console.log("afterLeave event", el);
+    },
   },
 };
 </script>
